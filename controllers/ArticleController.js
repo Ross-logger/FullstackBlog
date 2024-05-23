@@ -78,3 +78,14 @@ export const updateArticle = async (req, res) => {
         res.status(500).json({message: "Cannot update article"});
     }
 }
+
+export const getLastTags = async (req,res) => {
+    try {
+        const articles = await Article.find().limit(5).exec();
+        const tags = articles.map(post => post.tags).flat().slice(0,5);
+
+        res.status(200).json(tags);
+    } catch (err) {
+        res.status(500).json({message: "Cannot get last tags"});
+    }
+}

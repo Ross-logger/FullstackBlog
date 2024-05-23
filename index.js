@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from "mongoose";
 import multer from 'multer';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import {registerValidation, loginValidation, articleCreateValidation} from './validations.js';
 import checkAuth from './utils/checkAuth.js';
 import {login, aboutMe, register} from "./controllers/UserController.js";
@@ -10,7 +11,8 @@ import {
     deleteOneArticle,
     getAllArticles,
     getOneArticle,
-    updateArticle
+    updateArticle,
+    getLastTags
 } from "./controllers/ArticleController.js";
 import handleValidationErrors from "./utils/handleValidationErrors.js";
 
@@ -22,6 +24,7 @@ const DB_URI = process.env.DB_URI;
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 app.use('/uploads', express.static('uploads'));
 
 
@@ -62,6 +65,10 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 });
 
 app.get('/articles', getAllArticles);
+
+app.get('/tags', getLastTags);
+app.get('/articles/tags', getLastTags);
+
 app.get('/articles/:id', getOneArticle);
 app.post('/articles', checkAuth, articleCreateValidation, createArticle);
 app.patch('/articles/:id', checkAuth, articleCreateValidation, handleValidationErrors, updateArticle);

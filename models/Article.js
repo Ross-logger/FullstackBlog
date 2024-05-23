@@ -20,7 +20,7 @@ const ArticleSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    viewCount: {
+    viewsCount: {
         type: Number,
         default: 0,
     },
