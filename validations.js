@@ -16,5 +16,5 @@ export const articleCreateValidation = [
     body('title', 'Title must contain at least 1 character').isLength({min: 1}),
     body('content', 'Content must contain at least 1 character').isLength({min: 1}),
     body('tags', 'Wrong tag format, input an array').optional().isArray(),
-    body('imageUrl', 'Wrong image URL').optional().isURL(),
+    body('imageUrl', 'Wrong image URL').optional(),
 ];

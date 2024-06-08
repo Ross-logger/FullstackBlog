@@ -35,7 +35,7 @@ export const createArticle = async (req, res) => {
         const entry = new Article({
             title: req.body.title,
             content: req.body.content,
-            tags: req.body.tags,
+            tags: req.body.tags.split(',').map(tag => tag.trim()).filter(tag => tag), // Trim and filter tags
             imageUrl: req.body.imageUrl,
             user: req.userId,
         });
@@ -44,8 +44,7 @@ export const createArticle = async (req, res) => {
 
         res.status(201).json(article);
     } catch (err) {
-        console.log(err)
-        res.status(500).json({message: "Cannot create article"});
+        res.status(500).json({message: err});
 
     }
 }
@@ -68,16 +67,21 @@ export const deleteOneArticle = async (req, res) => {
 
 export const updateArticle = async (req, res) => {
     try {
-        const entry = await Article.findOneAndUpdate({'_id': req.params.id}, req.body);
+        const entry = await Article.findOneAndUpdate(
+            { '_id': req.params.id },
+            { $set: req.body }, // Use $set to specify the fields to update
+            { new: true } // Return the updated document
+        );
         if (!entry) {
-            return res.status(404).json({message: "Cannot update article. Article is not found"});
+            return res.status(404).json({ message: "Cannot update article. Article is not found" });
         }
-        res.status(200).json({message: "Article has been updated"});
+        res.status(200).json({ message: "Article has been updated", updatedArticle: entry });
     } catch (err) {
         console.log(err);
-        res.status(500).json({message: "Cannot update article"});
+        res.status(500).json({ message: "Cannot update article" });
     }
 }
+
 
 export const getLastTags = async (req,res) => {
     try {
