@@ -68,28 +68,39 @@ export const deleteOneArticle = async (req, res) => {
 export const updateArticle = async (req, res) => {
     try {
         const entry = await Article.findOneAndUpdate(
-            { '_id': req.params.id },
-            { $set: req.body }, // Use $set to specify the fields to update
-            { new: true } // Return the updated document
+            {'_id': req.params.id},
+            {$set: req.body}, // Use $set to specify the fields to update
+            {new: true} // Return the updated document
         );
         if (!entry) {
-            return res.status(404).json({ message: "Cannot update article. Article is not found" });
+            return res.status(404).json({message: "Cannot update article. Article is not found"});
         }
-        res.status(200).json({ message: "Article has been updated", updatedArticle: entry });
+        res.status(200).json({message: "Article has been updated", updatedArticle: entry});
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Cannot update article" });
+        res.status(500).json({message: "Cannot update article"});
     }
 }
 
 
-export const getLastTags = async (req,res) => {
+export const getLastTags = async (req, res) => {
     try {
         const articles = await Article.find().limit(5).exec();
-        const tags = articles.map(post => post.tags).flat().slice(0,5);
+        const tags = articles.map(post => post.tags).flat().slice(0, 5);
 
         res.status(200).json(tags);
     } catch (err) {
         res.status(500).json({message: "Cannot get last tags"});
+    }
+}
+
+export const getPostsWithTag = async (req, res) => {
+    try {
+        const articles = await Article.find({'tags': req.params.tag});
+
+        res.status(200).json(articles);
+    } catch (err) {
+        console.error('Error fetching articles by tag:', err);
+        res.status(500).json({message: "Cannot get articles with the given tag"});
     }
 }

@@ -12,7 +12,8 @@ import {
     getAllArticles,
     getOneArticle,
     updateArticle,
-    getLastTags
+    getLastTags,
+    getPostsWithTag
 } from "./controllers/ArticleController.js";
 import handleValidationErrors from "./utils/handleValidationErrors.js";
 
@@ -67,6 +68,7 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 app.get('/articles', getAllArticles);
 
 app.get('/tags', getLastTags);
+app.get('/tags/:tag', getPostsWithTag);
 app.get('/articles/tags', getLastTags);
 
 app.get('/articles/:id', getOneArticle);
